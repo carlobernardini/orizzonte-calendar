@@ -5,8 +5,18 @@ import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 
 class Calendar extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            focusedInput: 'startDate'
+        };
+    }
+
     render() {
-        const { label } = this.props;
+        const { label, onUpdate, value } = this.props;
+        const { focusedInput } = this.state;
+
         return (
             <div
                 className="orizzonte__filter"
@@ -17,13 +27,22 @@ class Calendar extends Component {
                     { label }
                 </div>
                 <DayPickerRangeController
-                    onDatesChange={ () => {} }
-                    onFocusChange={ () => {} }
-                    startDateId="startDate"
-                    endDateId="endDate"
+                    startDate={ value ? value.start : null }
+                    endDate={ value ? value.end : null }
+                    onDatesChange={ ({ startDate, endDate }) => {
+                        onUpdate({
+                            start: startDate,
+                            end: endDate
+                        });
+                    } }
+                    focusedInput={ focusedInput }
+                    onFocusChange={ (input) => {
+                        this.setState({
+                            focusedInput: input || 'startDate'
+                        });
+                    }}
                     numberOfMonths={ 2 }
-                    focused
-                    small
+                    noBorder
                 />
             </div>
         );
@@ -33,10 +52,12 @@ class Calendar extends Component {
 Calendar.displayName = 'OrizzonteCalendar';
 
 Calendar.propTypes = {
-    /** Field name for this filter, to be used in composed query */
-    // fieldName: PropTypes.string.isRequired,
     /** Label for this filter section */
     label: PropTypes.string.isRequired,
+    value: PropTypes.shape({
+        start: PropTypes.any,
+        end: PropTypes.any
+    }).isRequired,
     /** Internal callback for when filter value has changed */
     // onUpdate: PropTypes.func,
     // value: PropTypes.oneOfType([
@@ -49,12 +70,11 @@ Calendar.propTypes = {
     //         ])
     //     )
     // ]),
-    // onUpdate: PropTypes.func
+    onUpdate: PropTypes.func
 };
 
-// Calendar.defaultProps = {
-//     onUpdate: () => {},
-//     value: null
-// };
+Calendar.defaultProps = {
+    onUpdate: () => {},
+};
 
 export default Calendar;

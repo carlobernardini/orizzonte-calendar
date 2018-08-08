@@ -56,6 +56,7 @@ stories.add('Default', withState({
         label: 'Dates',
         filters: [
             <Calendar
+                fieldName="daterange"
                 key="daterange"
                 label="Date range"
                 selectedLabel="%s (Primary)"
