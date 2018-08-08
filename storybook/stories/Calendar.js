@@ -53,12 +53,24 @@ stories.add('Default', withState({
     query: {},
     groups: [{
         included: true,
-        label: 'Dates',
+        label: 'Date range',
         filters: [
             <Calendar
                 fieldName="daterange"
                 key="daterange"
-                label="Date range"
+                label="Select a date range"
+                selectedLabel="%s (Primary)"
+                range
+            />
+        ]
+    }, {
+        included: true,
+        label: 'Single date',
+        filters: [
+            <Calendar
+                fieldName="date"
+                key="date"
+                label="Select a date"
                 selectedLabel="%s (Primary)"
             />
         ]
