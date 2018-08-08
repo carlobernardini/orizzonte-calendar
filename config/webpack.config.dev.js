@@ -49,7 +49,7 @@ module.exports = {
     },
     resolve: {
         alias: {
-            'orizzonte': path.resolve(__dirname, '../src')
+            'orizzonte-calendar': path.resolve(__dirname, '../src')
         },
         modules: [path.resolve(__dirname, '../node_modules')],
         extensions: ['.js', '.jsx'],
