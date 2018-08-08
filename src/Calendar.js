@@ -15,7 +15,7 @@ class Calendar extends Component {
     }
 
     renderCalendar() {
-        const { dateFormat, onUpdate, value, range } = this.props;
+        const { calendarProps, dateFormat, onUpdate, value, range } = this.props;
         const { focusedInput } = this.state;
 
         if (!range) {
@@ -26,9 +26,9 @@ class Calendar extends Component {
                         onUpdate(date ? date.format(dateFormat) : date);
                     }}
                     onFocusChange={ () => {} }
-                    id="orizznteCalendar"
+                    id="orizzonteCalendar"
                     focused
-                    noBorder
+                    { ...calendarProps }
                 />
             );
         }
@@ -49,8 +49,7 @@ class Calendar extends Component {
                         focusedInput: input || 'startDate'
                     });
                 }}
-                numberOfMonths={ 2 }
-                noBorder
+                { ...calendarProps }
             />
         );
     }
@@ -76,33 +75,25 @@ class Calendar extends Component {
 Calendar.displayName = 'OrizzonteCalendar';
 
 Calendar.propTypes = {
+    calendarProps: PropTypes.object,
     dateFormat: PropTypes.string,
     /** Label for this filter section */
     label: PropTypes.string.isRequired,
+    /** Internal callback for when filter value has changed */
+    onUpdate: PropTypes.func,
+    range: PropTypes.bool,
     value: PropTypes.shape({
         start: PropTypes.any,
         end: PropTypes.any
-    }).isRequired,
-    /** Internal callback for when filter value has changed */
-    // onUpdate: PropTypes.func,
-    // value: PropTypes.oneOfType([
-    //     PropTypes.string,
-    //     PropTypes.number,
-    //     PropTypes.arrayOf(
-    //         PropTypes.oneOfType([
-    //             PropTypes.string,
-    //             PropTypes.number
-    //         ])
-    //     )
-    // ]),
-    onUpdate: PropTypes.func,
-    range: PropTypes.bool
+    })
 };
 
 Calendar.defaultProps = {
+    calendarProps: {},
     dateFormat: 'YYYY-MM-DD',
     onUpdate: () => {},
-    range: false
+    range: false,
+    value: null
 };
 
 export default Calendar;

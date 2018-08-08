@@ -4,6 +4,8 @@
   "description": "Calendar filter for Orizzonte library",
   "main": "./dist/orizzonte-calendar.min.js",
   "scripts": {
+    "build": "webpack --progress --config ./config/webpack.config.prod.js",
+    "prepublish": "npm run build",
     "storybook": "start-storybook -p 9002 -c ./storybook",
     "test": "jest"
   },
@@ -13,7 +15,7 @@
   },
   "keywords": [
     "orizzonte",
-    "filtering",
+    "filter",
     "calendar"
   ],
   "author": "Carlo Bernardini",

@@ -50,6 +50,10 @@ const component = ({ store }) => {
     );
 };
 
+const apiDateFormat = 'YYYY-MM-DD';
+const displayFormatShort = 'MMM D, YYYY';
+const displayFormatLong = 'MMMM Do, YYYY';
+
 stories.add('Default', withState({
     query: {},
     groups: [{
@@ -57,21 +61,26 @@ stories.add('Default', withState({
         label: 'Date range',
         filters: [
             <Calendar
+                calendarProps={{
+                    numberOfMonths: 2,
+                    noBorder: true
+                }}
+                dateFormat={ apiDateFormat }
                 fieldName="daterange"
                 key="daterange"
                 label="Select a date range"
                 selectedLabel={ (value) => {
-                    const dateStart = value.start ? moment(value.start, 'YYYY-MM-DD').format('MMM D, YYYY') : null;
-                    const dateEnd = value.end ? moment(value.end, 'YYYY-MM-DD').format('MMM D, YYYY') : null;
+                    const dateStart = value.start ? moment(value.start, 'YYYY-MM-DD').format(displayFormatShort) : null;
+                    const dateEnd = value.end ? moment(value.end, 'YYYY-MM-DD').format(displayFormatShort) : null;
 
                     if (!dateStart && dateEnd) {
                         return `Until ${ dateEnd }`;
                     }
                     if (dateStart && !dateEnd) {
-                        return `${ dateStart } - now`;
+                        return `${ dateStart } — now`;
                     }
 
-                    return `${ dateStart } - ${ dateEnd }`;
+                    return `${ dateStart } — ${ dateEnd }`;
                 }}
                 range
             />
@@ -81,11 +90,15 @@ stories.add('Default', withState({
         label: 'Single date',
         filters: [
             <Calendar
+                calendarProps={{
+                    noBorder: true
+                }}
+                dateFormat={ apiDateFormat }
                 fieldName="date"
                 key="date"
                 label="Select a date"
                 selectedLabel={ (value) => (
-                    value ? moment(value, 'YYYY-MM-DD').format('MMMM Do, YYYY') : null
+                    value ? moment(value, 'YYYY-MM-DD').format(displayFormatLong) : null
                 )}
             />
         ]
