@@ -70,8 +70,18 @@ stories.add('Default', withState({
                 fieldName="daterange"
                 key="1"
                 selectedLabel={ (value) => {
-                    const dateStart = value.start ? moment(value.start, 'YYYY-MM-DD').format(displayFormatShort) : null;
-                    const dateEnd = value.end ? moment(value.end, 'YYYY-MM-DD').format(displayFormatShort) : null;
+                    const parts = value.split('__');
+
+                    if (parts.length === 1) {
+                        if (value.indexOf('__') === 0) {
+                            parts.unshift(null);
+                        } else {
+                            parts.push(null);
+                        }
+                    }
+
+                    const dateStart = parts[0] ? moment(parts[0], 'YYYY-MM-DD').format(displayFormatShort) : null;
+                    const dateEnd = parts[1] ? moment(parts[1], 'YYYY-MM-DD').format(displayFormatShort) : null;
 
                     if (!dateStart && dateEnd) {
                         return `Until ${ dateEnd }`;
@@ -82,6 +92,7 @@ stories.add('Default', withState({
 
                     return `${ dateStart } — ${ dateEnd }`;
                 }}
+                rangeStringSeparator="__"
                 range
             />
         ]

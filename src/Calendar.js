@@ -14,8 +14,49 @@ class Calendar extends Component {
         };
     }
 
+    getParsedRange() {
+        const { dateFormat, value, rangeStringSeparator } = this.props;
+
+        if (!value) {
+            return {
+                start: null,
+                end: null
+            };
+        }
+
+        if (!rangeStringSeparator) {
+            return {
+                start: value ? moment(value.start, dateFormat) : null,
+                end: value ? moment(value.end, dateFormat) : null
+            };
+        }
+
+        const parts = value.split(rangeStringSeparator);
+
+        if (parts.length === 2) {
+            return {
+                start: moment(parts[0], dateFormat),
+                end: moment(parts[1], dateFormat)
+            };
+        }
+
+        if (value.indexOf(rangeStringSeparator) === 0) {
+            return {
+                start: null,
+                end: moment(parts[0], dateFormat)
+            };
+        }
+
+        return {
+            start: moment(parts[0], dateFormat),
+            end: null
+        };
+    }
+
     renderCalendar() {
-        const { calendarProps, dateFormat, onUpdate, value, range } = this.props;
+        const {
+            calendarProps, dateFormat, onUpdate, value, range, rangeStringSeparator
+        } = this.props;
         const { focusedInput } = this.state;
 
         if (!range) {
@@ -32,15 +73,26 @@ class Calendar extends Component {
             );
         }
 
+        const { start, end } = this.getParsedRange();
+
         return (
             <DayPickerRangeController
-                startDate={ value ? moment(value.start, dateFormat) : null }
-                endDate={ value ? moment(value.end, dateFormat) : null }
+                startDate={ start }
+                endDate={ end }
                 onDatesChange={ ({ startDate, endDate }) => {
-                    onUpdate({
-                        start: startDate ? startDate.format(dateFormat) : startDate,
-                        end: endDate ? endDate.format(dateFormat) : endDate
-                    });
+                    const startValue = startDate ? startDate.format(dateFormat) : startDate;
+                    const endValue = endDate ? endDate.format(dateFormat) : endDate;
+
+                    if (!rangeStringSeparator) {
+                        return onUpdate({
+                            start: startValue,
+                            end: endValue
+                        });
+                    }
+
+                    return onUpdate(
+                        [startValue, endValue].join(rangeStringSeparator)
+                    );
                 } }
                 focusedInput={ focusedInput }
                 onFocusChange={ (input) => {
@@ -95,6 +147,8 @@ Calendar.propTypes = {
     onUpdate: PropTypes.func,
     /** Whether to show a date range picker or a single day picker */
     range: PropTypes.bool,
+    /** When using a range separator, the date range will be stored as (separated) string */
+    rangeStringSeparator: PropTypes.string,
     /** The selected value */
     value: PropTypes.shape({
         start: PropTypes.any,
@@ -108,6 +162,7 @@ Calendar.defaultProps = {
     label: null,
     onUpdate: () => {},
     range: false,
+    rangeStringSeparator: null,
     value: null
 };
 
