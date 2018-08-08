@@ -85,13 +85,18 @@ class Calendar extends Component {
 Calendar.displayName = 'OrizzonteCalendar';
 
 Calendar.propTypes = {
+    /** Optional props to be passed on to the react-dates component */
     calendarProps: PropTypes.object,
+    /** Desired format for the selected dates
+        See https://momentjs.com/docs/#/displaying/ for possible values */
     dateFormat: PropTypes.string,
     /** Label for this filter section */
     label: PropTypes.string,
     /** Internal callback for when filter value has changed */
     onUpdate: PropTypes.func,
+    /** Whether to show a date range picker or a single day picker */
     range: PropTypes.bool,
+    /** The selected value */
     value: PropTypes.shape({
         start: PropTypes.any,
         end: PropTypes.any
