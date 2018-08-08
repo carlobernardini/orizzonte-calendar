@@ -54,18 +54,28 @@ class Calendar extends Component {
         );
     }
 
-    render() {
+    renderCaption() {
         const { label } = this.props;
 
+        if (!label) {
+            return null;
+        }
+
+        return (
+            <div
+                className="orizzonte__filter-caption"
+            >
+                { label }
+            </div>
+        );
+    }
+
+    render() {
         return (
             <div
                 className="orizzonte__filter"
             >
-                <div
-                    className="orizzonte__filter-caption"
-                >
-                    { label }
-                </div>
+                { this.renderCaption() }
                 { this.renderCalendar() }
             </div>
         );
@@ -78,7 +88,7 @@ Calendar.propTypes = {
     calendarProps: PropTypes.object,
     dateFormat: PropTypes.string,
     /** Label for this filter section */
-    label: PropTypes.string.isRequired,
+    label: PropTypes.string,
     /** Internal callback for when filter value has changed */
     onUpdate: PropTypes.func,
     range: PropTypes.bool,
@@ -91,6 +101,7 @@ Calendar.propTypes = {
 Calendar.defaultProps = {
     calendarProps: {},
     dateFormat: 'YYYY-MM-DD',
+    label: null,
     onUpdate: () => {},
     range: false,
     value: null

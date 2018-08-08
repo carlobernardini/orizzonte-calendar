@@ -67,8 +67,7 @@ stories.add('Default', withState({
                 }}
                 dateFormat={ apiDateFormat }
                 fieldName="daterange"
-                key="daterange"
-                label="Select a date range"
+                key="1"
                 selectedLabel={ (value) => {
                     const dateStart = value.start ? moment(value.start, 'YYYY-MM-DD').format(displayFormatShort) : null;
                     const dateEnd = value.end ? moment(value.end, 'YYYY-MM-DD').format(displayFormatShort) : null;
@@ -95,8 +94,7 @@ stories.add('Default', withState({
                 }}
                 dateFormat={ apiDateFormat }
                 fieldName="date"
-                key="date"
-                label="Select a date"
+                key="1"
                 selectedLabel={ (value) => (
                     value ? moment(value, 'YYYY-MM-DD').format(displayFormatLong) : null
                 )}
