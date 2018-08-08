@@ -26,7 +26,6 @@ class Calendar extends Component {
                         onUpdate(date ? date.format(dateFormat) : date);
                     }}
                     onFocusChange={ () => {} }
-                    id="orizzonteCalendar"
                     focused
                     { ...calendarProps }
                 />

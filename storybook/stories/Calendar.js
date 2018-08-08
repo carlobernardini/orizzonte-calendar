@@ -8,6 +8,7 @@ import { withInfo } from '@storybook/addon-info';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { withState } from '@dump247/storybook-state';
 import moment from 'moment';
+import 'orizzonte/dist/orizzonte.min.css';
 
 const stories = storiesOf('Orizzonte Calendar', module);
 
