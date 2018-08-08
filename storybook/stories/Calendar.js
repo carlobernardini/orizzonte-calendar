@@ -7,6 +7,7 @@ import { storiesOf } from '@storybook/react';
 import { withInfo } from '@storybook/addon-info';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { withState } from '@dump247/storybook-state';
+import moment from 'moment';
 
 const stories = storiesOf('Orizzonte Calendar', module);
 
@@ -59,7 +60,19 @@ stories.add('Default', withState({
                 fieldName="daterange"
                 key="daterange"
                 label="Select a date range"
-                selectedLabel="%s (Primary)"
+                selectedLabel={ (value) => {
+                    const dateStart = value.start ? moment(value.start, 'YYYY-MM-DD').format('MMM D, YYYY') : null;
+                    const dateEnd = value.end ? moment(value.end, 'YYYY-MM-DD').format('MMM D, YYYY') : null;
+
+                    if (!dateStart && dateEnd) {
+                        return `Until ${ dateEnd }`;
+                    }
+                    if (dateStart && !dateEnd) {
+                        return `${ dateStart } - now`;
+                    }
+
+                    return `${ dateStart } - ${ dateEnd }`;
+                }}
                 range
             />
         ]
@@ -71,7 +84,9 @@ stories.add('Default', withState({
                 fieldName="date"
                 key="date"
                 label="Select a date"
-                selectedLabel="%s (Primary)"
+                selectedLabel={ (value) => (
+                    value ? moment(value, 'YYYY-MM-DD').format('MMMM Do, YYYY') : null
+                )}
             />
         ]
     }]

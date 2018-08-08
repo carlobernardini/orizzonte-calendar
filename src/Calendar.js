@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import { DayPickerRangeController, DayPickerSingleDateController } from 'react-dates';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
@@ -14,15 +15,15 @@ class Calendar extends Component {
     }
 
     renderCalendar() {
-        const { onUpdate, value, range } = this.props;
+        const { dateFormat, onUpdate, value, range } = this.props;
         const { focusedInput } = this.state;
 
         if (!range) {
             return (
                 <DayPickerSingleDateController
-                    date={ value }
+                    date={ value ? moment(value, dateFormat) : null }
                     onDateChange={ (date) => {
-                        onUpdate(date);
+                        onUpdate(date ? date.format(dateFormat) : date);
                     }}
                     onFocusChange={ () => {} }
                     id="orizznteCalendar"
@@ -34,12 +35,12 @@ class Calendar extends Component {
 
         return (
             <DayPickerRangeController
-                startDate={ value ? value.start : null }
-                endDate={ value ? value.end : null }
+                startDate={ value ? moment(value.start, dateFormat) : null }
+                endDate={ value ? moment(value.end, dateFormat) : null }
                 onDatesChange={ ({ startDate, endDate }) => {
                     onUpdate({
-                        start: startDate,
-                        end: endDate
+                        start: startDate ? startDate.format(dateFormat) : startDate,
+                        end: endDate ? endDate.format(dateFormat) : endDate
                     });
                 } }
                 focusedInput={ focusedInput }
@@ -75,6 +76,7 @@ class Calendar extends Component {
 Calendar.displayName = 'OrizzonteCalendar';
 
 Calendar.propTypes = {
+    dateFormat: PropTypes.string,
     /** Label for this filter section */
     label: PropTypes.string.isRequired,
     value: PropTypes.shape({
@@ -98,6 +100,7 @@ Calendar.propTypes = {
 };
 
 Calendar.defaultProps = {
+    dateFormat: 'YYYY-MM-DD',
     onUpdate: () => {},
     range: false
 };
