@@ -1,9 +1,24 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { findIndex } from 'lodash-es';
 import { DayPickerRangeController, DayPickerSingleDateController } from 'react-dates';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
+
+const Caption = ({ children }) => {
+    if (!children) {
+        return null;
+    }
+
+    return (
+        <div
+            className="orizzonte__filter-caption"
+        >
+            { children }
+        </div>
+    );
+};
 
 class Calendar extends Component {
     constructor(props) {
@@ -15,9 +30,9 @@ class Calendar extends Component {
     }
 
     getParsedRange() {
-        const { dateFormat, value, rangeStringSeparator } = this.props;
+        const { dateFormat, value, predefinedOptions, rangeStringSeparator } = this.props;
 
-        if (!value) {
+        if (!value || value === '' || findIndex(predefinedOptions, ['value', value]) > -1) {
             return {
                 start: null,
                 end: null
@@ -105,28 +120,48 @@ class Calendar extends Component {
         );
     }
 
-    renderCaption() {
-        const { label } = this.props;
-
-        if (!label) {
+    renderPredefinedOptions() {
+        const { predefinedOptions, predefinedOptionsLabel, value, onUpdate } = this.props;
+        if (!predefinedOptions || !predefinedOptions.length) {
             return null;
         }
 
         return (
-            <div
-                className="orizzonte__filter-caption"
+            <select
+                className="orizzonte__filter-select"
+                value={ value || '' }
+                onChange={ (e) => {
+                    onUpdate(e.target.value);
+                }}
             >
-                { label }
-            </div>
+                <option
+                    value=""
+                >
+                    { predefinedOptionsLabel || 'Custom...' }
+                </option>
+                { predefinedOptions.map((option) => (
+                    <option
+                        value={ option.value }
+                        key={ option.value }
+                    >
+                        { option.label || option.value }
+                    </option>
+                )) }
+            </select>
         );
     }
 
     render() {
+        const { label } = this.props;
+
         return (
             <div
                 className="orizzonte__filter"
             >
-                { this.renderCaption() }
+                <Caption>
+                    { label }
+                </Caption>
+                { this.renderPredefinedOptions() }
                 { this.renderCalendar() }
             </div>
         );
@@ -145,15 +180,27 @@ Calendar.propTypes = {
     label: PropTypes.string,
     /** Internal callback for when filter value has changed */
     onUpdate: PropTypes.func,
+    /** List of predefined options to choose from instead of using the datepicker */
+    predefinedOptions: PropTypes.arrayOf(
+        PropTypes.shape({
+            value: PropTypes.string.isRequired,
+            label: PropTypes.string
+        })
+    ),
+    /** Default label to show when no predefined option is selected */
+    predefinedOptionsLabel: PropTypes.string,
     /** Whether to show a date range picker or a single day picker */
     range: PropTypes.bool,
     /** When using a range separator, the date range will be stored as (separated) string */
     rangeStringSeparator: PropTypes.string,
     /** The selected value */
-    value: PropTypes.shape({
-        start: PropTypes.any,
-        end: PropTypes.any
-    })
+    value: PropTypes.oneOfType([
+        PropTypes.shape({
+            start: PropTypes.any,
+            end: PropTypes.any
+        }),
+        PropTypes.string
+    ])
 };
 
 Calendar.defaultProps = {
@@ -161,9 +208,19 @@ Calendar.defaultProps = {
     dateFormat: 'YYYY-MM-DD',
     label: null,
     onUpdate: () => {},
+    predefinedOptions: null,
+    predefinedOptionsLabel: null,
     range: false,
     rangeStringSeparator: null,
     value: null
+};
+
+Caption.propTypes = {
+    children: PropTypes.string
+};
+
+Caption.defaultProps = {
+    children: null
 };
 
 export default Calendar;

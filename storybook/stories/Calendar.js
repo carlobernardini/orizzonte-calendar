@@ -70,6 +70,17 @@ stories.add('Default', withState({
                 fieldName="daterange"
                 key="1"
                 selectedLabel={ (value) => {
+
+                    const predefinedValue = value.match(/^-([0-9]{1})y$/)
+
+                    if (predefinedValue) {
+                        if (predefinedValue[1] === 1) {
+                            return 'Last year';
+                        }
+                        
+                        return `Last ${ predefinedValue[1] } years`;
+                    }
+
                     const parts = value.split('__');
 
                     if (parts.length === 1) {
@@ -92,6 +103,16 @@ stories.add('Default', withState({
 
                     return `${ dateStart } — ${ dateEnd }`;
                 }}
+                predefinedOptions={ [{
+                    value: '-1y',
+                    label: 'Last year'
+                }, {
+                    value: '-2y',
+                    label: 'Last two years'
+                }, {
+                    value: '-3y',
+                    label: 'Last three year'
+                }] }
                 rangeStringSeparator="__"
                 range
             />
