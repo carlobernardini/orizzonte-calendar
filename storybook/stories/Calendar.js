@@ -113,6 +113,7 @@ stories.add('Default', withState({
                     value: '-3y',
                     label: 'Last three year'
                 }] }
+                predefinedOptionsRadios
                 rangeStringSeparator="__"
                 range
             />

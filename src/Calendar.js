@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { findIndex } from 'lodash-es';
+import { findIndex, uniqueId } from 'lodash-es';
 import { DayPickerRangeController, DayPickerSingleDateController } from 'react-dates';
+import { Choices } from 'orizzonte';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 
@@ -121,9 +122,24 @@ class Calendar extends Component {
     }
 
     renderPredefinedOptions() {
-        const { predefinedOptions, predefinedOptionsLabel, value, onUpdate } = this.props;
+        const { predefinedOptions, predefinedOptionsLabel, predefinedOptionsRadios, value, onUpdate } = this.props;
+
         if (!predefinedOptions || !predefinedOptions.length) {
             return null;
+        }
+
+        if (predefinedOptionsRadios) {
+            return (
+                <Choices
+                    noPreferenceLabel={ predefinedOptionsLabel || 'Custom...' }
+                    options={ predefinedOptions }
+                    onUpdate={ (value) => {
+                        console.log(value);
+                        onUpdate(value);
+                    }}
+                    value={ value || '' }
+                />
+            );
         }
 
         return (
@@ -189,6 +205,8 @@ Calendar.propTypes = {
     ),
     /** Default label to show when no predefined option is selected */
     predefinedOptionsLabel: PropTypes.string,
+    /** Render predefined options as radios */
+    predefinedOptionsRadios: PropTypes.bool,
     /** Whether to show a date range picker or a single day picker */
     range: PropTypes.bool,
     /** When using a range separator, the date range will be stored as (separated) string */
@@ -210,6 +228,7 @@ Calendar.defaultProps = {
     onUpdate: () => {},
     predefinedOptions: null,
     predefinedOptionsLabel: null,
+    predefinedOptionsRadios: null,
     range: false,
     rangeStringSeparator: null,
     value: null
