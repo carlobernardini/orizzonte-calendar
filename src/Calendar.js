@@ -1,7 +1,7 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { findIndex, uniqueId } from 'lodash-es';
+import { findIndex } from 'lodash-es';
 import { DayPickerRangeController, DayPickerSingleDateController } from 'react-dates';
 import { Choices } from 'orizzonte';
 import 'react-dates/initialize';
@@ -122,7 +122,10 @@ class Calendar extends Component {
     }
 
     renderPredefinedOptions() {
-        const { predefinedOptions, predefinedOptionsLabel, predefinedOptionsRadios, value, onUpdate } = this.props;
+        const {
+            predefinedOptions, predefinedOptionsLabel, predefinedOptionsRadios,
+            value, onUpdate
+        } = this.props;
 
         if (!predefinedOptions || !predefinedOptions.length) {
             return null;
@@ -133,9 +136,8 @@ class Calendar extends Component {
                 <Choices
                     noPreferenceLabel={ predefinedOptionsLabel || 'Custom...' }
                     options={ predefinedOptions }
-                    onUpdate={ (value) => {
-                        console.log(value);
-                        onUpdate(value);
+                    onUpdate={ (newValue) => {
+                        onUpdate(newValue);
                     }}
                     value={ value || '' }
                 />
