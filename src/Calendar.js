@@ -123,9 +123,10 @@ class Calendar extends Component {
 
     renderPredefinedOptions() {
         const {
-            predefinedOptions, predefinedOptionsLabel, predefinedOptionsRadios,
+            predefinedOptions, predefinedOptionsRadios,
             value, onUpdate
         } = this.props;
+        console.log(value);
 
         if (!predefinedOptions || !predefinedOptions.length) {
             return null;
@@ -134,7 +135,6 @@ class Calendar extends Component {
         if (predefinedOptionsRadios) {
             return (
                 <Choices
-                    noPreferenceLabel={ predefinedOptionsLabel || 'Custom...' }
                     options={ predefinedOptions }
                     onUpdate={ (newValue) => {
                         onUpdate(newValue);
@@ -152,11 +152,6 @@ class Calendar extends Component {
                     onUpdate(e.target.value);
                 }}
             >
-                <option
-                    value=""
-                >
-                    { predefinedOptionsLabel || 'Custom...' }
-                </option>
                 { predefinedOptions.map((option) => (
                     <option
                         value={ option.value }
@@ -205,8 +200,6 @@ Calendar.propTypes = {
             label: PropTypes.string
         })
     ),
-    /** Default label to show when no predefined option is selected */
-    predefinedOptionsLabel: PropTypes.string,
     /** Render predefined options as radios */
     predefinedOptionsRadios: PropTypes.bool,
     /** Whether to show a date range picker or a single day picker */
@@ -229,7 +222,6 @@ Calendar.defaultProps = {
     label: null,
     onUpdate: () => {},
     predefinedOptions: null,
-    predefinedOptionsLabel: null,
     predefinedOptionsRadios: null,
     range: false,
     rangeStringSeparator: null,
